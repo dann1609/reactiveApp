@@ -89,6 +89,57 @@ You've successfully run and modified your React Native App. :partying_face:
 
 
 
+## High-level architecture diagram
+
+```mermaid
+graph TD
+    subgraph UI ["UI Layer (React Native)"]
+        Screens["Screens (HomeScreen, CartScreen)"]
+        Fragments["Fragments (ProductDetails)"]
+        Components["Shared Components (Layout, Button, Fab)"]
+    end
+
+    subgraph Logic ["Business Logic (Hooks & Models)"]
+        useCart["useCart Hook (Cart Operations & Memoized Totals)"]
+        useApiProducts["useApiProducts Hook (Data Fetching Logic)"]
+        Models["Models (Product & Variant Type Logic)"]
+    end
+
+    subgraph State ["State Management (Redux)"]
+        CartSlice["Cart Slice (Global State & Reducers)"]
+        Selectors["Selectors (Optimized Data Access)"]
+        Persistence["Persistence Middleware"]
+    end
+
+    subgraph Data ["Data & Services"]
+        Storage["Storage Service (MMKV/AsyncStorage)"]
+        Cache["Cache Facade (Stale-While-Revalidate)"]
+        API["External API (Product Data)"]
+    end
+
+    %% Relationships
+    Screens --> useCart
+    Screens --> useApiProducts
+    Fragments --> useCart
+    
+    useCart --> CartSlice
+    useCart --> Selectors
+    useCart -.-> Models
+    
+    Selectors --> CartSlice
+    CartSlice --> Persistence
+    Persistence --> Storage
+    
+    useApiProducts --> Cache
+    Cache --> API
+    Cache --> Storage
+```
+
+- **UI Layer**: Composed of Screens and reusable Components. It remains decoupled from raw data by interacting only with custom hooks.
+- **Logic Layer**: Hooks handle side effects and data transformation. Memoization at this level ensure the UI only re-renders when necessary.
+- **State Layer**: Redux toolkit manages global state. A dedicated middleware ensures the cart state is synchronized with persistent storage on every change.
+- **Data Layer**: A caching facade manages the "offline-first" strategy, prioritizing local storage when network requests fail.
+
 ## Notable tradeoffs and assumptions
 
 - **State Management & Persistence**: I chose to centralize the shopping cart state in **Redux** rather than local component state. This ensures that the cart is consistent across screens and persists between sessions via a custom `persistenceMiddleware` and `storageService`.
