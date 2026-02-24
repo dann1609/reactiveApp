@@ -3,6 +3,7 @@ import { Layout } from "../../components";
 import { useEffect, useState } from "react";
 import { getProductsFromApi } from "../../services/products";
 import { IProduct } from "../../models/product";
+import ProductCard from "../../components/productCard/ProductCard";
 
 export default function HomeScreen() {
 
@@ -20,7 +21,7 @@ export default function HomeScreen() {
             noScroll
         >
             {products.map((product) => (
-                <Text key={product.id}>{product.title}</Text>
+                <ProductCard key={product.id} product={product} />
             ))}
         </Layout>
     );
