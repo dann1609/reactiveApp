@@ -7,20 +7,24 @@ export function useApiProducts() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<Error | null>(null);
 
-    useEffect(() => {
+    const fetchProducts = () => {
         setLoading(true);
-        setError(null)
-        setProducts([])
+        setError(null);
+        setProducts([]);
         getProductsFromApi().then((data) => {
             setProducts(data);
             setLoading(false);
             setError(null);
         }).catch((error) => {
-            setProducts([])
+            setProducts([]);
             setError(error);
             setLoading(false);
         });
+    };
+
+    useEffect(() => {
+        fetchProducts();
     }, []);
 
-    return { products, loading, error };
+    return { products, loading, error, refetch: fetchProducts };
 }

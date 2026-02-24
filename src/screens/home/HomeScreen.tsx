@@ -11,7 +11,7 @@ import { useTheme } from "../../theme";
 export default function HomeScreen() {
 
     const { colors } = useTheme();
-    const { products, loading, error } = useApiProducts();
+    const { products, loading, error, refetch } = useApiProducts();
     const [modalVisible, setModalVisible] = useState(false)
     const [selectedProduct, setSelectedProduct] = useState<IProduct | null>(null);
 
@@ -28,6 +28,9 @@ export default function HomeScreen() {
     return (
         <Layout
             contentContainerStyle={styles.container}
+            onRefresh={refetch}
+            refreshing={loading}
+            forceScroll
         >
             {loading && <ActivityIndicator size="large" color={colors.primary} />}
             {error && <Text style={styles.autoCenter}>Error: {error.message}</Text>}

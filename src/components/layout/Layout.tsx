@@ -1,23 +1,29 @@
 import { ReactNode, useState } from "react";
-import { ColorSchemeName, ColorValue, Platform, ScrollView, StatusBar, StyleProp, View, ViewStyle } from "react-native";
+import { ColorSchemeName, ColorValue, Platform, RefreshControl, ScrollView, StatusBar, StyleProp, View, ViewStyle } from "react-native";
 import { SafeAreaView, useSafeAreaFrame, useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTheme } from "@react-navigation/native";
 
 interface ILayout {
     bgColor?: ColorValue
     noScroll?: boolean
+    forceScroll?: boolean
     style?: StyleProp<ViewStyle>
     contentContainerStyle?: StyleProp<ViewStyle>
     disableBottomInset?: boolean
+    onRefresh?: () => void
+    refreshing?: boolean
     children: ReactNode
 }
 
 export default function Layout({
     bgColor,
     noScroll,
+    forceScroll,
     style,
     contentContainerStyle,
     disableBottomInset,
+    onRefresh,
+    refreshing,
     children
 }: ILayout) {
     const insets = useSafeAreaInsets();
@@ -48,8 +54,18 @@ export default function Layout({
             }}>
                 <ScrollView
                     onLayout={({ nativeEvent }) => setFrameHeight(nativeEvent.layout.height)}
-                    scrollEnabled={!noScroll && hasOverflow}
+                    scrollEnabled={!noScroll && hasOverflow || forceScroll}
                     onContentSizeChange={(_width, height) => setContentHeight(height)}
+                    refreshControl={
+                        onRefresh ? (
+                            <RefreshControl
+                                refreshing={false}
+                                onRefresh={onRefresh}
+                                tintColor={colors.primary}
+                                colors={[colors.primary]}
+                            />
+                        ) : undefined
+                    }
                     contentContainerStyle={[contentContainerStyle, {
                         maxHeight: noScroll ? (contentHeight + contentBottomInset) : undefined,
                         minHeight: viewHeight,

@@ -96,31 +96,33 @@ graph TD
     subgraph UI ["UI Layer (React Native)"]
         Screens["Screens (HomeScreen, CartScreen)"]
         Fragments["Fragments (ProductDetails)"]
-        Components["Shared Components (Layout, Button, Fab)"]
+        Components["Shared Components (Layout + RefreshControl, Button, Fab)"]
     end
 
     subgraph Logic ["Business Logic (Hooks & Models)"]
-        useCart["useCart Hook (Cart Operations & Memoized Totals)"]
-        useApiProducts["useApiProducts Hook (Data Fetching Logic)"]
-        Models["Models (Product & Variant Type Logic)"]
+        useCart["useCart Hook (Memoized accessor functions)"]
+        useApiProducts["useApiProducts Hook (Fetch & Refetch logic)"]
+        Models["Models (Type safe helpers & Price logic)"]
     end
 
     subgraph State ["State Management (Redux)"]
-        CartSlice["Cart Slice (Global State & Reducers)"]
-        Selectors["Selectors (Optimized Data Access)"]
-        Persistence["Persistence Middleware"]
+        CartSlice["Cart Slice (Global Items & Related Products)"]
+        Selectors["Selectors (Memoized Related Products)"]
+        Persistence["Persistence Middleware (Auto-sync to Storage)"]
     end
 
     subgraph Data ["Data & Services"]
-        Storage["Storage Service (MMKV/AsyncStorage)"]
-        Cache["Cache Facade (Stale-While-Revalidate)"]
-        API["External API (Product Data)"]
+        Storage["Storage Service (LocalStorage / MMKV)"]
+        Cache["Cache Facade (Persistent Product Cache)"]
+        API["External API (testProducts.json)"]
     end
 
     %% Relationships
     Screens --> useCart
     Screens --> useApiProducts
     Fragments --> useCart
+    
+    Components -- "Scroll to Reload" --> useApiProducts
     
     useCart --> CartSlice
     useCart --> Selectors
@@ -135,10 +137,10 @@ graph TD
     Cache --> Storage
 ```
 
-- **UI Layer**: Composed of Screens and reusable Components. It remains decoupled from raw data by interacting only with custom hooks.
-- **Logic Layer**: Hooks handle side effects and data transformation. Memoization at this level ensure the UI only re-renders when necessary.
-- **State Layer**: Redux toolkit manages global state. A dedicated middleware ensures the cart state is synchronized with persistent storage on every change.
-- **Data Layer**: A caching facade manages the "offline-first" strategy, prioritizing local storage when network requests fail.
+- **UI Layer**: Now includes "Pull-to-Refresh" support via the `Layout` component. It remains decoupled by consuming only high-level hooks.
+- **Logic Layer**: Centralizes complex calculations (totals, item mapping) using `useMemo` returned as stable accessor functions, minimizing re-renders.
+- **State Layer**: Uses Redux Toolkit with a dedicated `Persistence Middleware` that ensures the cart survives app reloads/crashes by syncing with local storage.
+- **Data Layer**: Implements a `cachedApiFacade` for an offline-first experience, ensuring products are available even without an internet connection.
 
 ## Notable tradeoffs and assumptions
 
