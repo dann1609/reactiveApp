@@ -217,8 +217,7 @@ const styles = StyleSheet.create({
     image: {
         width: '100%',
         aspectRatio: 1,
-        borderBottomLeftRadius: 24,
-        borderBottomRightRadius: 24,
+        borderRadius: 24,
     },
     content: {
         padding: 24,

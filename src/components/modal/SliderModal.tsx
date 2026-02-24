@@ -39,6 +39,7 @@ export default function SliderModal({ visible, onRequestClose = () => { }, child
                 <View
                     onTouchStart={onRequestClose}
                     style={{
+                        marginTop: insets.top,
                         flex: 1,
                         flexDirection: 'column',
                         justifyContent: 'flex-end',
