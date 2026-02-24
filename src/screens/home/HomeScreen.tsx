@@ -1,12 +1,17 @@
 import { Text } from "react-native";
 import { Layout } from "../../components";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getProductsFromApi } from "../../services/products";
+import { IProduct } from "../../models/product";
 
 export default function HomeScreen() {
 
+    const [products, setProducts] = useState<IProduct[]>([]);
+
     useEffect(() => {
-        getProductsFromApi();
+        getProductsFromApi().then((data) => {
+            setProducts(data);
+        });
     }, []);
 
     return (
@@ -14,7 +19,9 @@ export default function HomeScreen() {
             disableBottomInset
             noScroll
         >
-            <Text>Home</Text>
+            {products.map((product) => (
+                <Text key={product.id}>{product.title}</Text>
+            ))}
         </Layout>
     );
 }
