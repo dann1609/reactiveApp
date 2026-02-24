@@ -8,12 +8,16 @@ import { useMemo } from "react";
 
 export default function CartScreen() {
     const { colors } = useTheme();
-    const [cart, { addItemsToCart, getTotalItems, getCartItemsData, getTotal }] = useCart();
+    const [cart, { addItemsToCart, getTotalItems, getCartItemsData, getTotal, getMaxPossibleQuantity }] = useCart();
 
     const cartItemsData = getCartItemsData();
 
     const handleIncrement = (item: any) => {
-        addItemsToCart({ productId: item.product.id, variantId: item.variant.id }, item.product, 1);
+        const maxPossibleQuantity = getMaxPossibleQuantity(item.product, item.variant);
+
+        if (item.variant && item.product && maxPossibleQuantity >= 1) {
+            addItemsToCart({ productId: item.product.id, variantId: item.variant.id }, item.product, 1);
+        }
     };
 
     const handleDecrement = (item: any) => {
