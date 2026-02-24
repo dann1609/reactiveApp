@@ -6,9 +6,11 @@ import { useApiProducts } from "../../hooks/useApiProducts";
 import SliderModal from "../../components/modal/SliderModal";
 import { IProduct } from "../../models/product";
 import ProductDetails from "../product/ProductDetailsFragment";
+import { useTheme } from "../../theme";
 
 export default function HomeScreen() {
 
+    const { colors } = useTheme();
     const { products, loading, error } = useApiProducts();
     const [modalVisible, setModalVisible] = useState(false)
     const [selectedProduct, setSelectedProduct] = useState<IProduct | null>(null);
@@ -27,7 +29,7 @@ export default function HomeScreen() {
         <Layout
             contentContainerStyle={styles.container}
         >
-            {loading && <ActivityIndicator size="large" color="#00ff00" />}
+            {loading && <ActivityIndicator size="large" color={colors.primary} />}
             {error && <Text style={styles.autoCenter}>Error: {error.message}</Text>}
             {products.map((product) => (
                 <ProductCard key={product.id} product={product} onPress={onProductPressed} />

@@ -12,7 +12,7 @@ export default function Text({ children, style, variant = 'text', ...props }: IT
     const color = colors[variant as keyof typeof colors] || colors.text;
 
     return (
-        <BaseText style={{ color, ...style }} {...props}>
+        <BaseText style={[{ color }, style]} {...props}>
             {children}
         </BaseText>
     );

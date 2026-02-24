@@ -1,4 +1,8 @@
 import Layout from "./layout/Layout";
 import Text from "./text/Text";
+import Button from "./button/Button";
+import ChipButton from "./button/ChipButton";
+import SliderModal from "./modal/SliderModal";
+import ProductCard from "./productCard/ProductCard";
 
-export { Layout, Text };
+export { Layout, Text, Button, ChipButton, SliderModal, ProductCard };
