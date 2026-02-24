@@ -9,5 +9,6 @@ export const getProductsFromApi = (): Promise<IProduct[]> => {
         })
         .catch(error => {
             console.error(error);
+            throw (error)
         });
 };

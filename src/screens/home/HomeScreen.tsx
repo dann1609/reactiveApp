@@ -1,24 +1,18 @@
-import { StyleSheet } from "react-native";
-import { Layout } from "../../components";
-import { useEffect, useState } from "react";
-import { getProductsFromApi } from "../../services/products";
-import { IProduct } from "../../models/product";
+import { ActivityIndicator, StyleSheet } from "react-native";
+import { Layout, Text } from "../../components";
 import ProductCard from "../../components/productCard/ProductCard";
+import { useApiProducts } from "../../hooks/useApiProducts";
 
 export default function HomeScreen() {
 
-    const [products, setProducts] = useState<IProduct[]>([]);
-
-    useEffect(() => {
-        getProductsFromApi().then((data) => {
-            setProducts(data);
-        });
-    }, []);
+    const { products, loading, error } = useApiProducts();
 
     return (
         <Layout
             contentContainerStyle={styles.container}
         >
+            {loading && <ActivityIndicator size="large" color="#00ff00" />}
+            {error && <Text style={styles.autoCenter}>Error: {error.message}</Text>}
             {products.map((product) => (
                 <ProductCard key={product.id} product={product} />
             ))}
@@ -33,4 +27,8 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-evenly",
     },
+    autoCenter: {
+        width: '100%',
+        textAlign: 'center',
+    }
 });
