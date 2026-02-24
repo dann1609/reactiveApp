@@ -63,3 +63,10 @@ This document provides a chronological record of the project's development, base
     *   *Decision*: Added "Pull-to-Refresh" with `forceScroll`. Refined `RefreshControl` to set `refreshing={false}` and use the custom layout loader to avoid UI flickering.
 *   **Project Documentation (c522c49 - 06ceecb)**
     *   *Decision*: Created comprehensive `README.md` and `DECISION_LOG.md` to document the journey and architecture.
+
+## 7. Unit Testing & Environment Setup
+*   **Action**: Implemented comprehensive unit tests for product helpers and Redux cart logic.
+*   **The Mocking Strategy**:
+    *   *Problem*: Tests failed with `Native module is null` because `AsyncStorage` was accessed during the component rendering in `App.test.tsx`.
+    *   *Decision*: Created a dedicated `jest.setup.js` with a manual mock for `AsyncStorage`.
+    *   *Rationale*: A manual mock is more reliable than searching for internal dependency paths and ensures a predictable storage interface for testing persistence logic.
