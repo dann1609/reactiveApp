@@ -1,8 +1,9 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ActivityIndicator, Image, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 import { Text, Button, ChipButton } from "../../components";
 import { checkIfIsOptionValueAvailable, checkIfProductIsAvailable, getImageUrlFromVariantOrProduct, getPriceFromVariantOrProduct, IProduct } from "../../models/product";
 import { useTheme } from "../../theme";
+import { useCart } from "../../hooks/useCart";
 
 interface ProductDetailsProps {
     product: IProduct | null;
@@ -11,6 +12,9 @@ interface ProductDetailsProps {
 
 export default function ProductDetails({ product, onBack }: ProductDetailsProps) {
     const { colors } = useTheme();
+    const [cart, { getMaxPossibleQuantity, addItemsToCart }] = useCart();
+
+    const [quantity, setQuantity] = useState(1);
 
     const initialOptions = useMemo(() => {
         if (!product || !product.variants.length) return {};
@@ -32,6 +36,10 @@ export default function ProductDetails({ product, onBack }: ProductDetailsProps)
             });
         }) || product.variants[0];
     }, [product, selectedOptions]);
+
+    useEffect(() => {
+        setQuantity(Math.min(maxPossibleQuantity, 1));
+    }, [selectedVariant]);
 
     if (!product) {
         return (
@@ -58,7 +66,26 @@ export default function ProductDetails({ product, onBack }: ProductDetailsProps)
         }));
     };
 
-    const isAvailable = checkIfProductIsAvailable(product, selectedVariant);
+    const maxPossibleQuantity = getMaxPossibleQuantity(product, selectedVariant);
+
+    const isAvailable = checkIfProductIsAvailable(product, selectedVariant) && maxPossibleQuantity > 0;
+
+    const onAddToCart = () => {
+        if (selectedVariant && product && quantity > 0 && maxPossibleQuantity >= quantity) {
+            addItemsToCart(
+                {
+                    productId: product.id,
+                    variantId: selectedVariant.id,
+                },
+                product,
+                quantity
+            );
+            onBack();
+        }
+    };
+
+    const incrementQuantity = () => setQuantity(prev => Math.min(maxPossibleQuantity, prev + 1));
+    const decrementQuantity = () => setQuantity(prev => Math.max(0, prev - 1));
 
     return (
         <ScrollView
@@ -118,8 +145,32 @@ export default function ProductDetails({ product, onBack }: ProductDetailsProps)
                 <Text style={styles.sectionTitle}>Description</Text>
                 <Text style={styles.description}>{product.description}</Text>
 
+                <View style={styles.divider} />
+
+                <View style={styles.quantitySection}>
+                    <Text style={styles.sectionTitle}>Quantity</Text>
+                    <View style={styles.quantityContainer}>
+                        <TouchableOpacity
+                            onPress={decrementQuantity}
+                            style={[styles.quantityButton, { borderColor: colors.border }]}
+                        >
+                            <Text style={styles.quantityButtonText}>-</Text>
+                        </TouchableOpacity>
+                        <Text style={styles.quantityText}>{quantity}</Text>
+                        <TouchableOpacity
+                            onPress={incrementQuantity}
+                            style={[styles.quantityButton, { borderColor: colors.border }]}
+                        >
+                            <Text style={styles.quantityButtonText}>+</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+
+                <View style={styles.divider} />
+
                 <Button
                     disabled={!isAvailable}
+                    onPress={onAddToCart}
                 >
                     <Text style={styles.buyButtonText}>
                         {isAvailable ? 'Add to Cart' : 'Out of Stock'}
@@ -226,5 +277,32 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 18,
         fontWeight: 'bold',
+    },
+    quantitySection: {
+        marginBottom: 8,
+    },
+    quantityContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 20,
+        marginTop: 8,
+    },
+    quantityButton: {
+        width: 44,
+        height: 44,
+        borderRadius: 22,
+        borderWidth: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    quantityButtonText: {
+        fontSize: 20,
+        fontWeight: '600',
+    },
+    quantityText: {
+        fontSize: 18,
+        fontWeight: '700',
+        minWidth: 20,
+        textAlign: 'center',
     },
 });
