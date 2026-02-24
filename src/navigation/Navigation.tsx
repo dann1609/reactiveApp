@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from '../screens/home/HomeScreen';
 import { useColorScheme } from 'react-native';
 import { getTheme } from '../theme';
+import { BottomTabBar } from '../components';
 
 const Stack = createNativeStackNavigator();
 
@@ -24,6 +25,7 @@ export default function Navigation() {
     return (
         <NavigationContainer theme={theme}>
             <RootStack />
+            <BottomTabBar />
         </NavigationContainer>
     );
 }
