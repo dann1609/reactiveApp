@@ -86,3 +86,17 @@ When you want to forcefully reload, for example to reset the state of your app, 
 ## Congratulations! :tada:
 
 You've successfully run and modified your React Native App. :partying_face:
+
+
+
+## Notable tradeoffs and assumptions
+
+- **State Management & Persistence**: I chose to centralize the shopping cart state in **Redux** rather than local component state. This ensures that the cart is consistent across screens and persists between sessions via a custom `persistenceMiddleware` and `storageService`.
+- **Custom Icon System**: Instead of adding a large icon library dependency, I implemented a custom SVG-based icon system in `icons.tsx`. This provides full control over the icon paths, stroke width, and visual centering (especially for asymmetrical icons like the shopping cart).
+- **Hook Performance Optimization**: In the `useCart` hook, I implemented a pattern where accessor functions (`getCartItemsData()`, `getTotal()`) return values pre-calculated via `useMemo`. This allows the UI to stay clean and reactive while ensuring heavy mapping or reduction logic only executes when the cart state objectively changes.
+- **API Caching Strategy**: The `cachedApiFacade` assumes that providing potentially stale data from storage is preferable to showing an error/loading screen if the network request fails, prioritizing user experience in low-connectivity scenarios.
+- **UI Responsiveness**: The layout utilizes `@react-navigation/native` theme tokens and `react-native-safe-area-context` to ensure consistent appearance across various device notches and system-level dark/light mode switches.
+
+
+
+
