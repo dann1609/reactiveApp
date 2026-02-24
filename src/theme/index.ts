@@ -1,6 +1,6 @@
-import { DarkTheme, DefaultTheme } from "@react-navigation/native";
+import { DarkTheme, DefaultTheme, Theme, useTheme } from "@react-navigation/native";
 
-import { Theme } from "@react-navigation/native";
+export { useTheme }
 
 export interface ITheme extends Theme {
 }

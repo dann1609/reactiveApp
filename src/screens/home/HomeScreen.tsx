@@ -2,6 +2,7 @@ import { ActivityIndicator, StyleSheet } from "react-native";
 import { Layout, Text } from "../../components";
 import ProductCard from "../../components/productCard/ProductCard";
 import { useApiProducts } from "../../hooks/useApiProducts";
+import SliderModal from "../../components/modal/SliderModal";
 
 export default function HomeScreen() {
 
@@ -16,6 +17,9 @@ export default function HomeScreen() {
             {products.map((product) => (
                 <ProductCard key={product.id} product={product} />
             ))}
+            <SliderModal visible={true} onRequestClose={() => { }}>
+                <Text>Modal</Text>
+            </SliderModal>
         </Layout>
     );
 }

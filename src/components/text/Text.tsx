@@ -1,5 +1,5 @@
 import { Text as BaseText, TextProps } from "react-native";
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from '../../theme'
 
 interface IText extends TextProps {
     variant?: string
