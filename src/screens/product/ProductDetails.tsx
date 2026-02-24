@@ -5,10 +5,9 @@ import { useTheme } from "../../theme";
 
 interface ProductDetailsProps {
     product: IProduct | null;
-    onBack: () => void;
 }
 
-export default function ProductDetails({ product, onBack }: ProductDetailsProps) {
+export default function ProductDetails({ product }: ProductDetailsProps) {
     const { colors } = useTheme();
 
     if (!product) {
@@ -22,23 +21,11 @@ export default function ProductDetails({ product, onBack }: ProductDetailsProps)
     const imageUrl = product.images[0]?.url;
     const price = `${product.priceRange.minVariantPrice.amount} ${product.priceRange.minVariantPrice.currencyCode}`;
 
-    const handleScroll = (event: any) => {
-        const offsetY = event.nativeEvent.contentOffset.y;
-        if (offsetY < -60) {
-            onBack();
-        }
-    };
-
     return (
         <ScrollView
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.container}
-            onScroll={handleScroll}
-            scrollEventThrottle={16}
         >
-            <View style={styles.handleContainer}>
-                <View style={styles.handle} />
-            </View>
             {imageUrl && (
                 <Image
                     source={{ uri: imageUrl }}
@@ -89,16 +76,6 @@ export default function ProductDetails({ product, onBack }: ProductDetailsProps)
 const styles = StyleSheet.create({
     container: {
         paddingBottom: 40,
-    },
-    handleContainer: {
-        alignItems: 'center',
-        paddingVertical: 12,
-    },
-    handle: {
-        width: 40,
-        height: 5,
-        borderRadius: 3,
-        backgroundColor: '#00000020',
     },
     emptyContainer: {
         height: 300,
