@@ -27,7 +27,7 @@ export default function SliderModal({ visible, onRequestClose = () => { }, child
                     left: 0,
                     right: 0,
                     bottom: 0,
-                    backgroundColor: colors.background,
+                    backgroundColor: '#00000080',
                 }}
             />
             <KeyboardAvoidingView

@@ -1,12 +1,22 @@
+import { useState } from "react";
 import { ActivityIndicator, StyleSheet } from "react-native";
 import { Layout, Text } from "../../components";
 import ProductCard from "../../components/productCard/ProductCard";
 import { useApiProducts } from "../../hooks/useApiProducts";
 import SliderModal from "../../components/modal/SliderModal";
+import { IProduct } from "../../models/product";
+import ProductDetails from "../product/ProductDetails";
 
 export default function HomeScreen() {
 
     const { products, loading, error } = useApiProducts();
+    const [modalVisible, setModalVisible] = useState(false)
+    const [selectedProduct, setSelectedProduct] = useState<IProduct | null>(null);
+
+    const onProductPressed = (product: IProduct) => {
+        setSelectedProduct(product);
+        setModalVisible(true);
+    }
 
     return (
         <Layout
@@ -15,10 +25,10 @@ export default function HomeScreen() {
             {loading && <ActivityIndicator size="large" color="#00ff00" />}
             {error && <Text style={styles.autoCenter}>Error: {error.message}</Text>}
             {products.map((product) => (
-                <ProductCard key={product.id} product={product} />
+                <ProductCard key={product.id} product={product} onPress={onProductPressed} />
             ))}
-            <SliderModal visible={true} onRequestClose={() => { }}>
-                <Text>Modal</Text>
+            <SliderModal visible={modalVisible} onRequestClose={() => setModalVisible(false)}>
+                <ProductDetails product={selectedProduct} />
             </SliderModal>
         </Layout>
     );

@@ -3,15 +3,20 @@ import { IProduct } from "../../models/product";
 import { Text } from "../index.ts";
 import { useTheme } from "@react-navigation/native";
 
-export default function ProductCard({ product }: { product: IProduct }) {
+export default function ProductCard({ product, onPress }: { product: IProduct, onPress: (product: IProduct) => void }) {
     const { colors } = useTheme();
     const imageUrl = product.images[0]?.url;
     const price = `${product.priceRange.minVariantPrice.amount} ${product.priceRange.minVariantPrice.currencyCode}`;
+
+    const onProductPressed = () => {
+        onPress(product);
+    }
 
     return (
         <TouchableOpacity
             key={product.id}
             activeOpacity={0.4}
+            onPress={onProductPressed}
             style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
             {imageUrl && (
                 <Image
