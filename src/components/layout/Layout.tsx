@@ -51,7 +51,7 @@ export default function Layout({
                     scrollEnabled={!noScroll && hasOverflow}
                     onContentSizeChange={(_width, height) => setContentHeight(height)}
                     contentContainerStyle={[contentContainerStyle, {
-                        maxHeight: noScroll ? (contentHeight + contentBottomInset) : 999,
+                        maxHeight: noScroll ? (contentHeight + contentBottomInset) : undefined,
                         minHeight: viewHeight,
                         paddingBottom: contentBottomInset,
                     }]}

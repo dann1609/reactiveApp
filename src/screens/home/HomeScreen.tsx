@@ -1,4 +1,4 @@
-import { Text } from "react-native";
+import { StyleSheet } from "react-native";
 import { Layout } from "../../components";
 import { useEffect, useState } from "react";
 import { getProductsFromApi } from "../../services/products";
@@ -17,8 +17,7 @@ export default function HomeScreen() {
 
     return (
         <Layout
-            disableBottomInset
-            noScroll
+            contentContainerStyle={styles.container}
         >
             {products.map((product) => (
                 <ProductCard key={product.id} product={product} />
@@ -26,3 +25,12 @@ export default function HomeScreen() {
         </Layout>
     );
 }
+
+const styles = StyleSheet.create({
+    container: {
+        paddingVertical: 10,
+        flexWrap: "wrap",
+        flexDirection: "row",
+        justifyContent: "space-evenly",
+    },
+});
