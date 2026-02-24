@@ -8,13 +8,15 @@ import TabBarButton from "./TabBarButton";
 import { HomeIcon, ShoppingCartIcon, UserIcon } from "../../assets/icons";
 import { useNavigation } from "@react-navigation/native";
 import { useCart } from "../../hooks/useCart";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { StackParamList } from "../../navigation/Navigation";
 
 export const bottomTabBarHeight = 60;
 
 export default function BottomTabBar() {
     const insets = useSafeAreaInsets();
     const { colors } = useTheme() as ITheme;
-    const navigation = useNavigation();
+    const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
     const [cart, { getTotalItems }] = useCart();
 
     const totalItems = getTotalItems();

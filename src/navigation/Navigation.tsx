@@ -7,7 +7,12 @@ import { getTheme } from '../theme';
 import { BottomTabBar } from '../components';
 import CartScreen from '../screens/cart/CartScreen';
 
-const Stack = createNativeStackNavigator();
+export type StackParamList = {
+    Home: undefined;
+    Cart: undefined;
+};
+
+const Stack = createNativeStackNavigator<StackParamList>();
 
 function RootStack() {
     return (
