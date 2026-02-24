@@ -6,6 +6,10 @@ export function useCart() {
     const dispatch = useDispatch();
     const cart = useSelector(selectCart);
 
+    const getTotalItems = () => {
+        return Object.values(cart).reduce((acc: number, val: any) => acc + val, 0);
+    };
+
     const getMaxPossibleQuantity = (product: any, selectedVariant: any) => {
         const alreadySelected = cart[`${product.id}-${selectedVariant?.id}`] || 0;
         return Math.max(0, (selectedVariant?.quantityAvailable || 0) - alreadySelected)
@@ -19,6 +23,7 @@ export function useCart() {
         cart,
         {
             getMaxPossibleQuantity,
+            getTotalItems,
             addItemsToCart,
         }
     ];

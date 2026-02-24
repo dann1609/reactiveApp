@@ -1,4 +1,4 @@
-import { View, Pressable, Text as NativeText } from "react-native";
+import { View, Pressable } from "react-native";
 import { Text, Fab } from "../index";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTheme } from "@react-navigation/native";
@@ -7,6 +7,7 @@ import TabBarButton from "./TabBarButton";
 
 import { HomeIcon, ShoppingCartIcon, UserIcon } from "../../assets/icons";
 import { useNavigation } from "@react-navigation/native";
+import { useCart } from "../../hooks/useCart";
 
 export const bottomTabBarHeight = 60;
 
@@ -14,6 +15,9 @@ export default function BottomTabBar() {
     const insets = useSafeAreaInsets();
     const { colors } = useTheme() as ITheme;
     const navigation = useNavigation();
+    const [cart, { getTotalItems }] = useCart();
+
+    const totalItems = getTotalItems();
 
     const onAddPress = () => {
     }
@@ -39,7 +43,36 @@ export default function BottomTabBar() {
                     top: -25,
                 }}
             >
-                {({ variant }) => <ShoppingCartIcon stroke={variant.contentColor} />}
+                {({ variant }) => (
+                    <View>
+                        <ShoppingCartIcon stroke={variant.contentColor} />
+                        {totalItems > 0 && (
+                            <View
+                                style={{
+                                    position: 'absolute',
+                                    right: -8,
+                                    top: -8,
+                                    backgroundColor: colors.notification,
+                                    borderRadius: 10,
+                                    width: 18,
+                                    height: 18,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        color: '#fff',
+                                        fontSize: 12,
+                                        fontWeight: 'bold',
+                                    }}
+                                >
+                                    {totalItems}
+                                </Text>
+                            </View>
+                        )}
+                    </View>
+                )}
             </Fab >
             <View
                 style={{
