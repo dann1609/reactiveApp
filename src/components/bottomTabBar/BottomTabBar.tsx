@@ -19,7 +19,8 @@ export default function BottomTabBar() {
 
     const totalItems = getTotalItems();
 
-    const onAddPress = () => {
+    const onCartPress = () => {
+        navigation.navigate('Cart');
     }
 
     return (
@@ -37,7 +38,7 @@ export default function BottomTabBar() {
             }}
         >
             <Fab
-                onPress={onAddPress}
+                onPress={onCartPress}
                 style={{
                     position: 'absolute',
                     top: -25,
