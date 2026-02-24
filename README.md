@@ -142,6 +142,14 @@ graph TD
 - **State Layer**: Uses Redux Toolkit with a dedicated `Persistence Middleware` that ensures the cart survives app reloads/crashes by syncing with local storage.
 - **Data Layer**: Implements a `cachedApiFacade` for an offline-first experience, ensuring products are available even without an internet connection.
 
+## Documentation & History
+
+For a detailed, chronological record of every architectural and design choice made during this project, please refer to the:
+
+👉 **[Decision Log](DECISION_LOG.md)**
+
+This log tracks everything from the initial navigation setup to advanced hook optimizations and visual refinements, documenting the collaboration between AI suggestions and developer decisions.
+
 ## Notable tradeoffs and assumptions
 
 - **State Management & Persistence**: I chose to centralize the shopping cart state in **Redux** rather than local component state. This ensures that the cart is consistent across screens and persists between sessions via a custom `persistenceMiddleware` and `storageService`.
